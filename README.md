@@ -1,31 +1,28 @@
-# Deep Learning Project 2025
+# Toxic Content Detection with Deep Learning
 
-This repository contains the implementation of various deep learning models and techniques for image classification tasks. The project includes implementations of different architectures, data augmentation strategies, and training methodologies.
+This repository contains the implementation of a deep learning-based toxic content detection system using the ToxiGen dataset. The project focuses on detecting toxic content while addressing algorithmic bias through various data augmentation techniques.
 
 ## Project Structure
 
 ```
-├── data/                      # Data directory
-│   ├── raw/                   # Raw data files
-│   └── processed/             # Processed data files
-├── models/                    # Model implementations
-│   ├── resnet.py             # ResNet model implementation
-│   ├── vgg.py                # VGG model implementation
-│   └── efficientnet.py       # EfficientNet model implementation
-├── src/                      # Source code
-│   ├── data/                 # Data processing modules
-│   │   ├── make_dataset.py   # Dataset creation scripts
-│   │   └── augmentations.py  # Data augmentation techniques
-│   ├── features/             # Feature engineering
-│   ├── models/               # Model training and evaluation
-│   │   ├── train_model.py    # Training scripts
-│   │   └── predict_model.py  # Prediction scripts
-│   └── visualization/        # Visualization tools
-├── notebooks/                # Jupyter notebooks
-├── tests/                    # Test files
+├── data_augmentation.py      # Data augmentation techniques implementation
+├── Toxigen_dataset.py        # ToxiGen dataset handler
+├── Toxigen_model.py          # Toxic content detection model
+├── main.ipynb                # Main notebook for experiments
 ├── requirements.txt          # Project dependencies
 └── README.md                # Project documentation
 ```
+
+## Features
+
+- Toxic content detection using fine-tuned HateBERT model
+- Multiple data augmentation techniques:
+  - Back translation (English-French-English)
+  - Synonym replacement using WordNet
+  - Paraphrasing using T5
+  - Random word deletion
+- Comprehensive dataset analysis and visualization
+- Bias mitigation through targeted data augmentation
 
 ## Setup
 
@@ -46,63 +43,121 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
+4. Download required NLTK data:
+```python
+import nltk
+nltk.download('wordnet')
+nltk.download('punkt')
+```
+
 ## Usage
 
-### Data Preparation
+### Loading and Analyzing the Dataset
 
-1. Place your raw data in the `data/raw` directory
-2. Run the data processing script:
-```bash
-python src/data/make_dataset.py
+```python
+from Toxigen_dataset import ToxiGenDataset
+
+# Initialize dataset handler
+toxigen_handler = ToxiGenDataset(huggingface_token="your_token_here")
+
+# Load and process the dataset
+dataset = toxigen_handler.load_dataset()
+
+# View dataset statistics
+toxigen_handler.print_statistics()
 ```
 
-### Training Models
+### Training the Model
 
-To train a model:
-```bash
-python src/models/train_model.py
+```python
+from Toxigen_model import Toxigen_Model
+
+# Initialize the model
+model = Toxigen_Model(
+    model_name="tomh/toxigen_hateBERT",
+    num_labels=2,
+    device=None  # Will automatically use CUDA if available
+)
+
+# Train the model
+model.train(
+    train_dataloader=train_dataloader,
+    num_epochs=3,
+    learning_rate=2e-5
+)
 ```
 
-### Making Predictions
+### Data Augmentation
 
-To make predictions using a trained model:
-```bash
-python src/models/predict_model.py
+```python
+from data_augmentation import DataAugmentor
+
+# Initialize augmentor with desired techniques
+augmentor = DataAugmentor(
+    use_back_translation=True,
+    use_synonym_replacement=True,
+    use_paraphrasing=True,
+    use_random_deletion=True
+)
+
+# Augment the dataset
+augmented_dataset = augmentor.augment_dataset(
+    dataset=dataset,
+    target_groups=['asian', 'black', 'lgbtq'],  # Specify groups to augment
+    augmentation_factor=3  # Number of augmented versions per example
+)
 ```
 
-## Model Architectures
+## Model Architecture
 
-The project includes implementations of several popular deep learning architectures:
+The project uses a fine-tuned HateBERT model for toxic content detection:
+- Base model: tomh/toxigen_hateBERT
+- Task: Binary classification (toxic vs non-toxic)
+- Input: Text sequences (max length: 512 tokens)
+- Output: Binary classification with probability scores
 
-- ResNet
-- VGG
-- EfficientNet
+## Data Augmentation Techniques
 
-Each model can be configured with different hyperparameters and training strategies.
+1. **Back Translation**
+   - Translates text to French and back to English
+   - Helps preserve meaning while introducing variation
 
-## Data Augmentation
+2. **Synonym Replacement**
+   - Uses WordNet to replace words with synonyms
+   - Maintains semantic meaning while increasing diversity
 
-The project includes various data augmentation techniques implemented in `src/data/augmentations.py`. These can be used to improve model robustness and prevent overfitting.
+3. **Paraphrasing**
+   - Uses T5 model to generate paraphrases
+   - Creates semantically equivalent but syntactically different versions
 
-## Testing
+4. **Random Deletion**
+   - Randomly removes words with probability p
+   - Helps model learn to be robust to missing information
 
-Run the test suite:
-```bash
-pytest tests/
-```
+## Authors
 
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
+- Marc Bonhôte
+- Mikaël Schär
+- Viva Berlenghi
 
 ## License
 
-[Specify your license here]
+This project is licensed under the [Your License Here, e.g., MIT License].
 
-## Contact
+### Third-Party Assets
 
-[Your contact information]
+- **ToxiGen Dataset**: Used in accordance with its [license and usage terms](https://github.com/microsoft/ToxiGen#license). Please cite the original paper if using this data.
+
+- **HateBERT Model**: Based on the implementation from [`tomh/toxigen_hateBERT`](https://github.com/tomh/toxigen_hateBERT), which is itself based on the HateBERT model by Caselli et al. (2021). Refer to the repository for licensing details.
+
+---
+
+### 🔖 Citations
+
+If you use this project, please also cite the original datasets and models:
+
+#### ToxiGen:
+> Hartvigsen, T., Wallace, E., Singh, S., & Gardner, M. (2022). ToxiGen: A Large-Scale Machine-Generated Dataset for Adversarial and Implicit Hate Speech Detection. *ACL 2022*.
+
+#### HateBERT:
+> Caselli, T., Basile, V., Mitrović, J., & Hee, C. D. (2021). HateBERT: Retraining BERT for Abusive Language Detection in English. *Workshop on Abusive Language Online (ALW 2021)*.
