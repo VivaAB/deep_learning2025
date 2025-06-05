@@ -50,64 +50,6 @@ nltk.download('wordnet')
 nltk.download('punkt')
 ```
 
-## Usage
-
-### Loading and Analyzing the Dataset
-
-```python
-from Toxigen_dataset import ToxiGenDataset
-
-# Initialize dataset handler
-toxigen_handler = ToxiGenDataset(huggingface_token="your_token_here")
-
-# Load and process the dataset
-dataset = toxigen_handler.load_dataset()
-
-# View dataset statistics
-toxigen_handler.print_statistics()
-```
-
-### Training the Model
-
-```python
-from Toxigen_model import Toxigen_Model
-
-# Initialize the model
-model = Toxigen_Model(
-    model_name="tomh/toxigen_hateBERT",
-    num_labels=2,
-    device=None  # Will automatically use CUDA if available
-)
-
-# Train the model
-model.train(
-    train_dataloader=train_dataloader,
-    num_epochs=3,
-    learning_rate=2e-5
-)
-```
-
-### Data Augmentation
-
-```python
-from data_augmentation import DataAugmentor
-
-# Initialize augmentor with desired techniques
-augmentor = DataAugmentor(
-    use_back_translation=True,
-    use_synonym_replacement=True,
-    use_paraphrasing=True,
-    use_random_deletion=True
-)
-
-# Augment the dataset
-augmented_dataset = augmentor.augment_dataset(
-    dataset=dataset,
-    target_groups=['asian', 'black', 'lgbtq'],  # Specify groups to augment
-    augmentation_factor=3  # Number of augmented versions per example
-)
-```
-
 ## Model Architecture
 
 The project uses a fine-tuned HateBERT model for toxic content detection:
@@ -141,8 +83,6 @@ The project uses a fine-tuned HateBERT model for toxic content detection:
 - Viva Berlenghi
 
 ## License
-
-This project is licensed under the [Your License Here, e.g., MIT License].
 
 ### Third-Party Assets
 
