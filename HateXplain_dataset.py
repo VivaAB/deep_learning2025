@@ -12,7 +12,7 @@ class HateXplainDataset:
         self.dataset = None
         self._processed_dataset = None
 
-    def load_dataset(self) -> Dict[str, Dataset]:
+    def load_HateXplain(self) -> Dict[str, Dataset]:
         """
         Load the HateXplain dataset from HuggingFace.
 
@@ -23,15 +23,11 @@ class HateXplainDataset:
             print("Attempting to load HateXplain dataset...")
             self.dataset = load_dataset("hatexplain", trust_remote_code=True)
             # After loading the dataset
-            for split in ['train', 'validation', 'test']:
+            for split in ['train', 'test']:
                 self.dataset[split] = self._process_labels(split)
 
-            # Post-process and standardize target groups
-            #self._post_process()
-
             print("Dataset loaded successfully")
-            print(f"Available splits: {list(self.dataset.keys())}")
-
+            # validation split not used on this project, hence we didn't return it
             return {
                 'train': self.dataset['train'],
                 'test': self.dataset['test']
@@ -87,15 +83,21 @@ class HateXplainDataset:
 
                 # Get the target group
                 target = example['annotators']['target']
-                # If multiple targets, take the first one
+                # If multiple annotators, take the first one
                 target_group = target[0] if target else 'None'
-
+                # If target group is None, set it to 'None'
+                if target_group is None:
+                    target_group = 'None'
+                # If target group is a list, take the first element
+                if len(target_group) > 1:
+                    target_group = [target_group[0]]
+                if len(target_group) > 1:
+                    print(f"Warning: Multiple target groups found for example in {split} split. Using the first one: {target_group[0]}")
                 processed_examples.append({
                     'text': text,
                     'labels': most_common_label,  # Using 'labels' to match the expected format
                     'target_group': target_group
                 })
-
             # Update the dataset with processed examples
             dataset_processed = Dataset.from_list(processed_examples)
             print(f"Processed {len(processed_examples)} examples from {split} split")
@@ -172,30 +174,6 @@ class HateXplainDataset:
             for target, count in sorted(hate_by_target.items(), key=lambda x: x[1], reverse=True):
                 total_for_target = target_groups[target]
                 print(f"{target}: {count} hate speech examples ({count/total_for_target*100:.2f}% of this target)")
-
-    def _post_process(self):
-        """
-        Post-process the dataset by removing unnecessary columns and standardizing target groups.
-        """
-        for split in ['train', 'test']:
-            # Remove unnecessary columns
-            self.dataset[split] = self.dataset[split].remove_columns(self.columns_to_remove)
-
-            # Standardize target groups
-            new_examples = []
-            for example in self.dataset[split]:
-                new_example = example.copy()
-                target = example['target_group']
-                if isinstance(target, list):
-                    target = target[0] if target else 'none'
-                new_example['target_group'] = self.standardization_map.get(
-                    target,
-                    target
-                )
-                new_examples.append(new_example)
-
-            # Replace the split with the new standardized data
-            self.dataset[split] = Dataset.from_list(new_examples)
 
     def remove_small_group(self) -> Dict[str, Dataset]:
         """
