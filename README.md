@@ -12,8 +12,8 @@ This repository implements a deep learning-based toxic content detection system 
 ├
 ├── HateXplain_dataset.py                   # HateXplain dataset handler
 ├── HateXplain_model.py                     # HateXplain model implementation
-├── utils_.py                               # Utility functions             
-├── augmented_with_hatexplain_mik_2.ipynb   # Notebook for running HateXplain experiments
+├── utils.py                                # Utility functions             
+├── run_HateXplain.ipynb                    # Notebook for running HateXplain experiments
 
 
 ├── project.ipynb                           # Main project notebook
