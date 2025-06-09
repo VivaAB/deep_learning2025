@@ -1,28 +1,39 @@
 # Toxic Content Detection with Deep Learning
 
-This repository contains the implementation of a deep learning-based toxic content detection system using the ToxiGen dataset. The project focuses on detecting toxic content while addressing algorithmic bias through various data augmentation techniques.
+This repository implements a deep learning-based toxic content detection system using the HateXplain and ToxiGen dataset with hateBERT models. The project focuses on detecting toxic content while addressing algorithmic bias through various data augmentation techniques.
 
 ## Project Structure
 
 ```
-├── data_augmentation.py      # Data augmentation techniques implementation
-├── Toxigen_dataset.py        # ToxiGen dataset handler
-├── Toxigen_model.py          # Toxic content detection model
-├── main.ipynb                # Main notebook for experiments
-├── requirements.txt          # Project dependencies
-└── README.md                # Project documentation
+├── Toxigen_dataset.py                      # ToxiGen dataset handler
+├── Toxigen_model.py                        # ToxiGen model implementation
+├── data_augmentation.py                    # Data augmentation techniques implementation
+├── run_ToxiGen.ipynb                       # Notebook for running ToxiGen experiments
+├
+├── HateXplain_dataset.py                   # HateXplain dataset handler
+├── HateXplain_model.py                     # HateXplain model implementation
+├── utils_.py                               # Utility functions             
+├── augmented_with_hatexplain_mik_2.ipynb   # Notebook for running HateXplain experiments
+
+
+├── project.ipynb                           # Main project notebook
+├── sc_weight_BERT_model.py                 # BERT model with sample weights
+
+├
+├── requirements.txt                        # Project dependencies
+└── README.md                               # Project documentation
 ```
 
 ## Features
 
 - Toxic content detection using fine-tuned HateBERT model
-- Multiple data augmentation techniques:
-  - Back translation (English-French-English)
-  - Synonym replacement using WordNet
-  - Paraphrasing using T5
-  - Random word deletion
 - Comprehensive dataset analysis and visualization
 - Bias mitigation through targeted data augmentation
+- Multiple data augmentation techniques:
+  - Back translation
+  - Synonym replacement
+  - Paraphrasing
+  - Random word deletion
 
 ## Setup
 
@@ -48,6 +59,16 @@ pip install -r requirements.txt
 import nltk
 nltk.download('wordnet')
 nltk.download('punkt')
+```
+
+5. Run the code:
+For Toxigen experiments:
+```bash
+jupyter notebook run_Toxigen.ipynb
+```
+For HateXplain experiments:
+```bash
+jupyter notebook run_HateXplain.ipynb
 ```
 
 ## Model Architecture
@@ -84,12 +105,11 @@ The project uses a fine-tuned HateBERT model for toxic content detection:
 
 ## License
 
-### Third-Party Assets
-
 - **ToxiGen Dataset**: Used in accordance with its [license and usage terms](https://github.com/microsoft/ToxiGen#license). Please cite the original paper if using this data.
 
 - **HateBERT Model**: Based on the implementation from [`tomh/toxigen_hateBERT`](https://github.com/tomh/toxigen_hateBERT), which is itself based on the HateBERT model by Caselli et al. (2021). Refer to the repository for licensing details.
 
+- Code assistance provided by [Cursor AI](https://www.cursor.sh).
 ---
 
 ### 🔖 Citations
