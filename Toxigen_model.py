@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+# Portions of this code were written or refined with assistance from Cursor AI (https://www.cursor.sh)
+
 """
 This module implements a fine-tunable Toxigen model for toxic content detection.
 
