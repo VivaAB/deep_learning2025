@@ -14,11 +14,6 @@ This repository implements a deep learning-based toxic content detection system 
 ├── HateXplain_model.py                     # HateXplain model implementation
 ├── utils.py                                # Utility functions             
 ├── run_HateXplain.ipynb                    # Notebook for running HateXplain experiments
-
-
-├── project.ipynb                           # Main project notebook
-├── sc_weight_BERT_model.py                 # BERT model with sample weights
-
 ├
 ├── requirements.txt                        # Project dependencies
 └── README.md                               # Project documentation
@@ -70,33 +65,6 @@ For HateXplain experiments:
 ```bash
 jupyter notebook run_HateXplain.ipynb
 ```
-
-## Model Architecture
-
-The project uses a fine-tuned HateBERT model for toxic content detection:
-- Base model: tomh/toxigen_hateBERT
-- Task: Binary classification (toxic vs non-toxic)
-- Input: Text sequences (max length: 512 tokens)
-- Output: Binary classification with probability scores
-
-## Data Augmentation Techniques
-
-1. **Back Translation**
-   - Translates text to French and back to English
-   - Helps preserve meaning while introducing variation
-
-2. **Synonym Replacement**
-   - Uses WordNet to replace words with synonyms
-   - Maintains semantic meaning while increasing diversity
-
-3. **Paraphrasing**
-   - Uses T5 model to generate paraphrases
-   - Creates semantically equivalent but syntactically different versions
-
-4. **Random Deletion**
-   - Randomly removes words with probability p
-   - Helps model learn to be robust to missing information
-
 ## Authors
 
 - Marc Bonhôte
