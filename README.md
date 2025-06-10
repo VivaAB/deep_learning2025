@@ -55,8 +55,13 @@ import nltk
 nltk.download('wordnet')
 nltk.download('punkt')
 ```
+5. In the run_ToxiGen.ipynb file, add you HuggingFace token :
+```python
+# Initialize and load the ToxiGen dataset
+HUGGING_FACE_TOKEN = "your token here"
+```
 
-5. Run the code:
+6. Run the code:
 For Toxigen experiments:
 ```bash
 jupyter notebook run_Toxigen.ipynb
