@@ -20,12 +20,10 @@ __status__ = "Final"
 import torch
 import nltk
 from nltk.corpus import wordnet
-from nltk.tokenize import word_tokenize
 from transformers import MarianMTModel, MarianTokenizer, T5ForConditionalGeneration, T5Tokenizer
 import random
 import logging
-from typing import List, Dict, Union, Optional
-import numpy as np
+from typing import List, Dict, Optional
 from tqdm import tqdm
 
 # Configure logging
